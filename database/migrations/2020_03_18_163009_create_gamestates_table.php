@@ -16,7 +16,7 @@ class CreateGamestatesTable extends Migration
         Schema::create('gamestates', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('game_id');
-            $table->unsignedInteger('stage');
+            $table->unsignedInteger('step');
             $table->json('state');
             $table->timestamps();
         });
