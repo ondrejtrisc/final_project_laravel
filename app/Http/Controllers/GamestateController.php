@@ -17,7 +17,7 @@ class GamestateController extends Controller
         $state = new stdClass();
         $state->players = $players;
         $state->territories = [];
-        $state->turn = $players[0];
+        $state->turn = 0;
 
         $territoryNames = ['brazil', 'argentina', 'peru', 'venezuela'];
 
@@ -81,8 +81,71 @@ class GamestateController extends Controller
         return $gamestate->state;
     }
 
+    public function attack($game_id) {
+
+        $gamestate = Gamestate::where('game_id', $game_id)->orderBy('step', 'desc')->first();
+        
+        $fromName = $_GET['from'];
+        $toName = $_GET['to'];
+
+        $state = json_decode($gamestate->state);
+
+        foreach ($state->territories as $territory)
+        {
+            if ($territory->name === $fromName)
+            {
+                $fromTerritory = $territory;
+                break;
+            }
+        }
+
+        foreach ($state->territories as $territory)
+        {
+            if ($territory->name === $toName)
+            {
+                $toTerritory = $territory;
+                break;
+            }
+        }
+
+        if ($fromTerritory->force > $toTerritory->force)
+        {
+            $toTerritory->force -= 1;
+        }
+        else
+        {
+            $fromTerritory->force -= 1;
+        }
+
+        if ($toTerritory->force === 0)
+        {
+            $toTerritory->player = $fromTerritory->player;
+            $toTerritory->force = $fromTerritory->force - 1;
+            $fromTerritory->force = 1;
+        }
+
+        if ($state->turn === count($state->players) - 1)
+        {
+            $state->turn = 0;
+        }
+        else
+        {
+            $state->turn++;
+        }
+
+        $newGamestate = new Gamestate();
+        $newGamestate->game_id = $game_id;
+        $newGamestate->step = $gamestate->step + 1;
+        $newGamestate->state = json_encode($state);
+
+        $newGamestate->save();
+
+        return json_encode($state);
+    }
+
     public function test() {
 
+        $this->create_initial(1, [1, 2]);
         return $this->get_current_state(1);
     }
 }
