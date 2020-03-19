@@ -24,7 +24,7 @@ if (!mix.inProduction()) {
  
 mix.react('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
- 
+    .js('resources/js/app.js', 'public/js')
     .browserSync({
         host: 'localhost',
         port: 3000,
