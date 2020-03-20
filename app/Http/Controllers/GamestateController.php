@@ -85,9 +85,12 @@ class GamestateController extends Controller
 
         $gamestate = Gamestate::where('game_id', $game_id)->orderBy('step', 'desc')->first();
         
-        $fromName = $_GET['from'];
-        $toName = $_GET['to'];
-
+        $requestPayload = file_get_contents("php://input");
+        $object = json_decode($requestPayload);
+        
+        
+        $fromName = $object->attackingTerritory;
+        $toName = $object->defendingTerritory;
         $state = json_decode($gamestate->state);
 
         foreach ($state->territories as $territory)

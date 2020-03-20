@@ -165,18 +165,19 @@ function isEnemyTerritory(attacking, defending) {
 async function sendAttackToServer (attacking, defending) {
   toSend.attackingTerritory = attacking
   toSend.defendingTerritory = defending
-  fetch('../backend/attack.php', 
+  fetch('../attack/1', 
     {
         method: "POST",
         headers: {
             "Content-Type": "application/json; charset=utf-8",
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(toSend)
     }
       )
       .then(response => response.json())// parses response as JSON
       .then(data => {
-        territories = data
+        territories = data.territories
         colorTerritories()
         addNumberOfUnits()
       });

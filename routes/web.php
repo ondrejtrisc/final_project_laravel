@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/test', 'GamestateController@test');
-Route::get('/attack/{game_id}', 'GamestateController@attack');
+Route::post('/attack/{game_id}', 'GamestateController@attack');
