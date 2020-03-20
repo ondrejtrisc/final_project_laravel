@@ -88,7 +88,6 @@ class GamestateController extends Controller
         $requestPayload = file_get_contents("php://input");
         $object = json_decode($requestPayload);
         
-        
         $fromName = $object->attackingTerritory;
         $toName = $object->defendingTerritory;
         $state = json_decode($gamestate->state);
@@ -146,9 +145,11 @@ class GamestateController extends Controller
         return json_encode($state);
     }
 
-    public function test() {
 
-        $this->create_initial(1, [1, 2]);
-        return $this->get_current_state(1);
+    /*a method for testing purposes - to create a new game make a GET request at /initialize/{game_id} with a fresh game_id*/
+    public function initialize($game_id) {
+
+        $this->create_initial($game_id, [1, 2]);
+        return $this->get_current_state($game_id);
     }
 }
