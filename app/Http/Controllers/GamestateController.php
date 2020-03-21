@@ -59,7 +59,7 @@ class GamestateController extends Controller
         }
 
         //distribution of remaining troops
-        $initial_units = 5;
+        $initial_units = 15;
         $limit = $initial_units - floor((count($state->territories) / count($state->players)));
         for ($i = 0; $i < $limit; $i++)
         {
@@ -83,16 +83,18 @@ class GamestateController extends Controller
 
     public function attack($game_id) {
 
+        //gets the most recent gamestate from the database
         $gamestate = Gamestate::where('game_id', $game_id)->orderBy('step', 'desc')->first();
+        $state = json_decode($gamestate->state);
         
+        //gets the data about the move from the request
         $requestPayload = file_get_contents("php://input");
         $object = json_decode($requestPayload);
         $fromName = $object->attackingTerritory;
         $toName = $object->defendingTerritory;
         $blitz = $object->blitz;
 
-        $state = json_decode($gamestate->state);
-
+        //locates the attacking territory
         foreach ($state->territories as $territory)
         {
             if ($territory->name === $fromName)
@@ -102,6 +104,7 @@ class GamestateController extends Controller
             }
         }
 
+        //locates the defending territory
         foreach ($state->territories as $territory)
         {
             if ($territory->name === $toName)
@@ -111,15 +114,35 @@ class GamestateController extends Controller
             }
         }
 
+        //battle
         do
         {
-            if ($fromTerritory->units > $toTerritory->units)
+            $fromDiceNumber = min($fromTerritory->units - 1, 3);
+            $fromDice = [];
+            for ($i = 0; $i < $fromDiceNumber; $i++)
             {
-                $toTerritory->units -= 1;
+                $fromDice[] = rand(1, 6);
             }
-            else
+            rsort($fromDice);
+            
+            $toDiceNumber = min($toTerritory->units, 2);
+            $toDice = [];
+            for ($i = 0; $i < $toDiceNumber; $i++)
             {
-                $fromTerritory->units -= 1;
+                $toDice[] = rand(1, 6);
+            }
+            rsort($toDice);
+
+            for ($i = 0; $i < min($fromDiceNumber, $toDiceNumber); $i++)
+            {
+                if ($fromDice[$i] > $toDice[$i])
+                {
+                    $toTerritory->units -= 1;
+                }
+                else
+                {
+                    $fromTerritory->units -= 1;
+                }
             }
 
             if ($toTerritory->units === 0)
@@ -130,8 +153,9 @@ class GamestateController extends Controller
                 break;
             }
         }
-        while ($blitz && $fromTerritory->units > 1);
+        while ($blitz === 'true' && $fromTerritory->units > 1);
         
+        //makes it the next player's turn
         if ($state->turn === count($state->players) - 1)
         {
             $state->turn = 0;
@@ -141,13 +165,16 @@ class GamestateController extends Controller
             $state->turn++;
         }
 
+        //creates the new gamestate
         $newGamestate = new Gamestate();
         $newGamestate->game_id = $game_id;
         $newGamestate->step = $gamestate->step + 1;
         $newGamestate->state = json_encode($state);
 
+        //saves the new gamestate to the database
         $newGamestate->save();
 
+        //returns the new state to the frontend
         return json_encode($state);
     }
 
