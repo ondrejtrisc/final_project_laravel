@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+<<<<<<< HEAD
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -30,3 +31,9 @@ Route::post('/games/{id}/launch', 'GameController@launch');
 Route::get('/games/{id}/edit', 'GameController@edit');
 Route::post('/games/{id}/edit', 'GameController@update');
 Route::delete('/games/{id}/delete', 'GameController@delete');
+=======
+Route::get('/test', 'GamestateController@test');
+Route::get('/initialize/{game_id}', 'GamestateController@initialize');
+Route::get('/{game_id}', 'GamestateController@get_current_state');
+Route::post('/attack/{game_id}', 'GamestateController@attack');
+>>>>>>> f6e3d55fc4a7698f0f2209a4257bb7eb6e4284a2

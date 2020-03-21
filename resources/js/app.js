@@ -6,6 +6,7 @@
 
 require('./bootstrap');
 
+<<<<<<< HEAD
 window.Vue = require('vue');
 
 /**
@@ -30,3 +31,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+=======
+>>>>>>> f6e3d55fc4a7698f0f2209a4257bb7eb6e4284a2
