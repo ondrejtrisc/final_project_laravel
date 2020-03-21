@@ -26,7 +26,7 @@ class GamestateController extends Controller
             $territory = new stdClass();
             $territory->name = $name;
             $territory->player = null;
-            $territory->force = 0;
+            $territory->units = 0;
 
             $state->territories[] = $territory;
         }
@@ -45,7 +45,7 @@ class GamestateController extends Controller
         {
             $player = $state->players[$playerIndex];
             $territory->player = $player;
-            $territory->force = 1;
+            $territory->units = 1;
             $occupiedBy[$player][] = $territory;
 
             if ($playerIndex === count($state->players) - 1)
@@ -59,14 +59,14 @@ class GamestateController extends Controller
         }
 
         //distribution of remaining troops
-        $initial_force = 5;
-        $limit = $initial_force - floor((count($state->territories) / count($state->players)));
+        $initial_units = 5;
+        $limit = $initial_units - floor((count($state->territories) / count($state->players)));
         for ($i = 0; $i < $limit; $i++)
         {
             foreach($state->players as $player)
             {                  
                 $territory = $occupiedBy[$player][rand(0, count($occupiedBy[$player]) - 1)];
-                $territory->force += 1;
+                $territory->units += 1;
             }
         }
 
@@ -110,20 +110,20 @@ class GamestateController extends Controller
             }
         }
 
-        if ($fromTerritory->force > $toTerritory->force)
+        if ($fromTerritory->units > $toTerritory->units)
         {
-            $toTerritory->force -= 1;
+            $toTerritory->units -= 1;
         }
         else
         {
-            $fromTerritory->force -= 1;
+            $fromTerritory->units -= 1;
         }
 
-        if ($toTerritory->force === 0)
+        if ($toTerritory->units <= 0)
         {
             $toTerritory->player = $fromTerritory->player;
-            $toTerritory->force = $fromTerritory->force - 1;
-            $fromTerritory->force = 1;
+            $toTerritory->units = $fromTerritory->units - 1;
+            $fromTerritory->units = 1;
         }
 
         if ($state->turn === count($state->players) - 1)
