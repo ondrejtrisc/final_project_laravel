@@ -87,9 +87,10 @@ class GamestateController extends Controller
         
         $requestPayload = file_get_contents("php://input");
         $object = json_decode($requestPayload);
-        
         $fromName = $object->attackingTerritory;
         $toName = $object->defendingTerritory;
+        $blitz = $object->blitz;
+
         $state = json_decode($gamestate->state);
 
         foreach ($state->territories as $territory)
@@ -110,22 +111,27 @@ class GamestateController extends Controller
             }
         }
 
-        if ($fromTerritory->units > $toTerritory->units)
+        do
         {
-            $toTerritory->units -= 1;
-        }
-        else
-        {
-            $fromTerritory->units -= 1;
-        }
+            if ($fromTerritory->units > $toTerritory->units)
+            {
+                $toTerritory->units -= 1;
+            }
+            else
+            {
+                $fromTerritory->units -= 1;
+            }
 
-        if ($toTerritory->units <= 0)
-        {
-            $toTerritory->player = $fromTerritory->player;
-            $toTerritory->units = $fromTerritory->units - 1;
-            $fromTerritory->units = 1;
+            if ($toTerritory->units === 0)
+            {
+                $toTerritory->player = $fromTerritory->player;
+                $toTerritory->units = $fromTerritory->units - 1;
+                $fromTerritory->units = 1;
+                break;
+            }
         }
-
+        while ($blitz && $fromTerritory->units > 1);
+        
         if ($state->turn === count($state->players) - 1)
         {
             $state->turn = 0;
