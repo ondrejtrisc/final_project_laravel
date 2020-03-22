@@ -1,6 +1,3 @@
-// need to finish correct mapping at neighbours function
-// change force back to units?
-
 let territories = []
 
 let neighbours =  {
@@ -18,11 +15,12 @@ let bluePlayer = 2;
 
 let toSend = {
   attackingTerritory: "",
-  defendingTerritory: ""
+  defendingTerritory: "",
+  blitz: 'true'
 }
 
 const getStateOfGame = () => {
-  fetch('./test')
+  fetch('./initialize/9')
     .then(promise => promise.json())
     .then(data => {
       territories = data.territories
@@ -45,7 +43,7 @@ const colorTerritories = () => {
 
 const addNumberOfUnits = () => {
   territories.map(territory => {
-    document.getElementById(`${territory.name}-units-text`).textContent = `${territory.force}`
+    document.getElementById(`${territory.name}-units-text`).textContent = `${territory.units}`
   })
 }
 
@@ -165,7 +163,7 @@ function isEnemyTerritory(attacking, defending) {
 async function sendAttackToServer (attacking, defending) {
   toSend.attackingTerritory = attacking
   toSend.defendingTerritory = defending
-  fetch('../attack/1', 
+  fetch('./attack/9', 
     {
         method: "POST",
         headers: {

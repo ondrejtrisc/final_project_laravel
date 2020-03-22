@@ -1,0 +1,29 @@
+.board {
+  max-width: 100%;
+  position: relative;
+}
+
+
+
+.ownedByPlayerGreen {
+  fill-opacity: 1 !important;
+  fill: green !important;
+}
+
+.ownedByPlayerBlue {
+  fill-opacity: 1 !important;
+  fill: blue !important;
+}
+
+.selected {
+  fill: none;
+  fill-opacity: 1 !important;
+  fill: silver !important;
+  z-index: 99;
+}
+
+#map:hover {
+  cursor: default;
+}
+
+
