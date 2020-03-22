@@ -15,31 +15,22 @@
         "@babel/preset-env": "^7.6.3",
         "@babel/preset-react": "^7.6.3",
         "axios": "^0.19",
-<<<<<<< HEAD
         "bootstrap": "^4.0.0",
-        "cross-env": "^7.0",
+        "cross-env": "^5.2.1",
         "jquery": "^3.2",
-        "laravel-mix": "^5.0.1",
+        "laravel-mix": "^4.0.7",
         "lodash": "^4.17.13",
         "popper.js": "^1.12",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.20.1",
-        "sass-loader": "^8.0.0",
+        "sass": "^1.15.2",
+        "sass-loader": "^7.1.0",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
-=======
+        "vue-template-compiler": "^2.6.11",
         "babel-preset-react": "^6.24.1",
         "browser-sync": "^2.26.7",
         "browser-sync-webpack-plugin": "^2.2.2",
-        "cross-env": "^5.2.1",
-        "laravel-mix": "^4.0.7",
-        "lodash": "^4.17.13",
         "react": "^16.11.0",
-        "react-dom": "^16.11.0",
-        "resolve-url-loader": "^2.3.1",
-        "sass": "^1.15.2",
-        "sass-loader": "^7.1.0",
-        "vue-template-compiler": "^2.6.11"
+        "react-dom": "^16.11.0"
     },
     "babel": {
         "presets": [
@@ -52,6 +43,5 @@
     },
     "dependencies": {
         "dropzone": "^5.5.1"
->>>>>>> f6e3d55fc4a7698f0f2209a4257bb7eb6e4284a2
     }
 }

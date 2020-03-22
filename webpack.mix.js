@@ -10,11 +10,10 @@ require('dotenv').config();
  | file for the application as well as bundling up all the JS files.
  |
  */
-<<<<<<< HEAD
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
-=======
+mix.sass('resources/sass/app.scss', 'public/css')
+    .react('resources/js/app.js', 'public/js')
+
  
 mix.options({
     processCssUrls: false
@@ -27,10 +26,7 @@ if (!mix.inProduction()) {
     .sourceMaps()
 }
  
-mix.react('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-    .js('resources/js/app.js', 'public/js')
-    .browserSync({
+mix.browserSync({
         host: 'localhost',
         port: 3000,
         proxy: {
@@ -40,4 +36,3 @@ mix.react('resources/js/app.js', 'public/js')
  
 // add versioning 
 mix.version();
->>>>>>> f6e3d55fc4a7698f0f2209a4257bb7eb6e4284a2
