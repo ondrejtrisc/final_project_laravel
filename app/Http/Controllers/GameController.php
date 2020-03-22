@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Game;
 use App\User;
+use App\Http\Controllers\GamestateController;
 
 class GameController extends Controller
 {
+    private function usersIdStrToArrOfUsersIds($game){
+        $str_users_ids = $game->users_ids;
+        $arr_users_ids = explode(';', $str_users_ids);
+        // dd($arr_users_ids);
+        return $arr_users_ids;
+    }
+
+
     private function usersIdStrToArrOfUsers($game){
         $str_users_ids = $game->users_ids;
         $arr_users_ids = explode(';', $str_users_ids);
@@ -100,8 +109,13 @@ class GameController extends Controller
 
     public function launch($id){
         $game = Game::findOrFail($id);
+        // dd($this->usersIdStrToArrOfUsersIds($game));
         $game->status = 'launched';
         $game->save();
-        return redirect('/games');
+        
+        $gamestate = new GamestateController;
+        $gamestate->create_initial($id, $this->usersIdStrToArrOfUsersIds($game));
+        // dd($gamestate);
+        return redirect('/'.$id);
     }
 }

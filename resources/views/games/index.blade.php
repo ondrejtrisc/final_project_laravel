@@ -61,42 +61,50 @@
         </td>
         <td>
           <div style="display: flex">
-            <div class="btn-div">
-              <form action="{{ action('GameController@show', [$game->id]) }}" method="get">
-                @csrf
-                {{-- <input type="hidden" name="user" value={{\Auth::id}}> --}}
-                <button type="submit">Show</button>
-              </form>
-            </div>
-            <div class="btn-div">
-              @if(Auth::user()->id != $game->founder_user_id && $num_users[$game->id]<$game->max_players)
-                <form action="{{ action('GameController@update', [$game->id]) }}" method="post">
+            @if($game->status != 'launched')
+              <div class="btn-div">
+                <form action="{{ action('GameController@show', [$game->id]) }}" method="get">
                   @csrf
                   {{-- <input type="hidden" name="user" value={{\Auth::id}}> --}}
-                  <button type="submit">Join</button>
+                  <button type="submit">Show</button>
                 </form>
-              @endif
-            </div>
-            <div class="btn-div">
-              @if(Auth::user()->id == $game->founder_user_id)  
-                <form action="{{ action('GameController@delete', [$game->id]) }}" method="post">
-                  @method("delete")
-                  @csrf
-                  <button type="submit">Delete</button>
-                </form>
-              @endif
-            </div>
-            <div>
-              @if(Auth::user()->id == $game->founder_user_id)  
-              {{-- {{dd($num_users[$game->id])}} --}}
-                @if($num_users[$game->id] == $game->max_players)
-                  <form action="{{ action('GameController@launch', [$game->id]) }}" method="post">
+              </div>
+              <div class="btn-div">
+                @if(Auth::user()->id != $game->founder_user_id && $num_users[$game->id]<$game->max_players)
+                  <form action="{{ action('GameController@update', [$game->id]) }}" method="post">
                     @csrf
-                    <button type="submit">Launch the game</button>
+                    {{-- <input type="hidden" name="user" value={{\Auth::id}}> --}}
+                    <button type="submit">Join</button>
                   </form>
                 @endif
-              @endif
-            </div>
+              </div>
+              <div class="btn-div">
+                @if(Auth::user()->id == $game->founder_user_id)  
+                  <form action="{{ action('GameController@delete', [$game->id]) }}" method="post">
+                    @method("delete")
+                    @csrf
+                    <button type="submit">Delete</button>
+                  </form>
+                @endif
+              </div>
+              <div>
+                @if(Auth::user()->id == $game->founder_user_id)  
+                {{-- {{dd($num_users[$game->id])}} --}}
+                  @if($num_users[$game->id] == $game->max_players)
+                    <form action="{{ action('GameController@launch', [$game->id]) }}" method="post">
+                      @csrf
+                      <button type="submit">Launch the game</button>
+                    </form>
+                  @endif
+                @endif
+              </div>
+            @else
+              @if(array_search(\Auth::user(), $game_users[$game->id]) > -1)
+                <form action="{{ action('GamestateController@get_current_state', [$game->id]) }}" method="get">
+                  <button type="submit">Play</button>
+                </form>
+              @endif  
+            @endif
           </div>
         </td>
       </tr>

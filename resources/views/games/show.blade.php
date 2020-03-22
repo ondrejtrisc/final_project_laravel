@@ -27,12 +27,16 @@
   @endforeach
 </p>
 <p><strong>Maximum number of players: </strong>{{$game->max_players}}</p>
+
 {{-- <p><strong>Status: </strong>
   @if(array_search(\Auth::user(), $game_users))
     {{'you joined this game'}}
   @else
     {{$game->status}}
   @endif --}}
+{{-- </p> --}}
+
+@if($game->status != 'launched')
 
   @if(Auth::user()->id == $game->founder_user_id)  
     @if($num_users == $game->max_players)
@@ -44,28 +48,37 @@
       {{-- {{'wait other users to join'}} --}}
     @endif
   @endif
-{{-- </p> --}}
 
-@if($u == \Auth::user() && Auth::user()->id != $game->founder_user_id)
-  <form action="{{ action('GameController@leave', [$game->id]) }}" method="post">
-    @csrf
-    <button type="submit">Leave this game</button>
-  </form>
-@endif
+  @if($u == \Auth::user() && Auth::user()->id != $game->founder_user_id)
+    <form action="{{ action('GameController@leave', [$game->id]) }}" method="post">
+      @csrf
+      <button type="submit">Leave this game</button>
+    </form>
+  @endif
 
-@if(Auth::user()->id != $game->founder_user_id && $num_users < $game->max_players)
-  <form action="{{ action('GameController@update', [$game->id]) }}" method="post">
-    @csrf
-    <button type="submit">Join</button>
-  </form>
-@endif
+  @if(Auth::user()->id != $game->founder_user_id && $num_users < $game->max_players)
+    <form action="{{ action('GameController@update', [$game->id]) }}" method="post">
+      @csrf
+      <button type="submit">Join</button>
+    </form>
+  @endif
 
-@if(Auth::user()->id == $game->founder_user_id)  
-  <form action="{{ action('GameController@delete', [$game->id]) }}" method="post">
-    @method("delete")
-    @csrf
-    <button type="submit">Delete</button>
-  </form>
+  @if(Auth::user()->id == $game->founder_user_id)  
+    <form action="{{ action('GameController@delete', [$game->id]) }}" method="post">
+      @method("delete")
+      @csrf
+      <button type="submit">Delete</button>
+    </form>
+  @endif
+
+@else
+
+  @if(array_search(\Auth::user(), $game_users[$game->id]) > -1)
+    <form action="{{ action('GamestateController@get_current_state', [$game->id]) }}" method="get">
+      <button type="submit">Play</button>
+    </form>
+  @endif  
+
 @endif
 
 <form action="{{ action('GameController@index') }}" method="get">
